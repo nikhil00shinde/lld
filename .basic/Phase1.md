@@ -871,3 +871,121 @@ for (int i = 0; i < 5; i++) {
 ## 5. Methods 
 
 
+### Method Anatomy
+
+```java
+// access_modifier return_type method_name(parameters) throws ExceptionType
+public static int add(int a, int b) {
+    return a + b;
+}
+
+// void — no return value
+public void printMessage(String msg) {
+    System.out.println(msg);
+    // implicit return
+}
+```
+
+### Method Overloading (Compile-time Polymorphism)
+
+Same method name, different parameter list. Return type alone is NOT enough.
+
+```java
+public int add(int a, int b) { return a + b; }
+public double add(double a, double b) { return a + b; }
+public int add(int a, int b, int c) { return a + b + c; }
+
+// These two CANNOT coexist (same params, different return):
+// public int calculate(int x) { }
+// public double calculate(int x) { }  // COMPILE ERROR
+```
+
+### Varargs (Variable Arguments)
+
+```java
+public int sum(int... numbers) {  // treated as int[] internally
+    int total = 0;
+    for (int n : numbers) total += n;
+    return total;
+}
+
+sum(1, 2);        // 3
+sum(1, 2, 3, 4);  // 10
+sum();             // 0
+
+// Rules:
+// - Only ONE varargs per method
+// - Must be the LAST parameter
+public void method(String name, int... scores) { }  // OK
+// public void method(int... a, int... b) { }  // ERROR
+// public void method(int... a, String name) { }  // ERROR
+```
+
+### Recursion
+
+```java
+// Factorial
+public int factorial(int n) {
+    if (n <= 1) return 1;           // base case
+    return n * factorial(n - 1);     // recursive case
+}
+
+// Fibonacci
+public int fib(int n) {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);  // O(2^n) — terrible! Use DP instead.
+}
+```
+
+---
+
+## 6. Arrays
+
+### Declaration & Initialization
+
+```java
+// Declaration + allocation
+int[] arr = new int[5];  // [0, 0, 0, 0, 0] — default values
+
+// Declaration + initialization
+int[] arr = {1, 2, 3, 4, 5};
+
+// Multi-dimensional
+int[][] matrix = new int[3][4];      // 3 rows, 4 columns
+int[][] matrix = {{1,2}, {3,4}, {5,6}};
+
+// Jagged array (different column sizes)
+int[][] jagged = new int[3][];
+jagged[0] = new int[2];
+jagged[1] = new int[4];
+jagged[2] = new int[1];
+```
+
+### Key Operations
+
+```java
+int[] arr = {5, 3, 1, 4, 2};
+
+arr.length;              // 5 (property, NOT method — no parentheses)
+Arrays.sort(arr);        // [1, 2, 3, 4, 5] — in-place
+Arrays.toString(arr);    // "[1, 2, 3, 4, 5]"
+Arrays.fill(arr, 0);     // [0, 0, 0, 0, 0]
+Arrays.copyOf(arr, 3);   // [0, 0, 0] — first 3 elements
+Arrays.equals(a, b);     // content comparison (NOT ==)
+Arrays.binarySearch(arr, 3); // index of 3 (array must be sorted)
+
+// 2D array printing
+System.out.println(Arrays.deepToString(matrix));
+```
+
+### Interview Q: Array vs ArrayList?
+
+| Feature      | Array             | ArrayList              |
+|-------------|-------------------|------------------------|
+| Size        | Fixed             | Dynamic (grows/shrinks)|
+| Type        | Primitives + Objects | Objects only (uses wrappers) |
+| Performance | Faster (direct access) | Slightly slower (object overhead) |
+| Syntax      | `arr[i]`          | `list.get(i)`          |
+| Length      | `arr.length`      | `list.size()`          |
+| Generics    | No                | Yes                    |
+| Utility     | `Arrays` class    | Built-in methods       |
